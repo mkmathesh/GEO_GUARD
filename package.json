@@ -1,0 +1,27 @@
+{
+  "name": "save_forest",
+  "version": "1.0.0",
+  "description": "my-app/\r ├── client/ (React App)\r │   ├── public/             # Static assets (favicon, index.html)\r │   ├── src/                # React source code\r │   │   ├── assets/         # Images, global styles, fonts\r │   │   ├── components/     # Reusable UI (Button, Card, Navbar)\r │   │   ├── hooks/          # Custom React hooks\r │   │   ├── pages/          # Full page views (Home, Dashboard)\r │   │   ├── services/       # API calls using fetch/axios to Node.js\r │   │   ├── context/        # React Context for global state\r │   │   └── App.js          # Main React component\r │   └── package.json\r ├── server/ (Node.js API)\r │   ├── config/             # Database connection strings\r │   ├── controllers/        # Logic to handle requests and responses\r │   ├── models/             # MySQL schema definitions or ORM models\r │   ├── routes/             # Express route definitions\r │   ├── middleware/         # Auth, logging, and error handlers\r │   ├── scripts/            # Database migrations and seed files (SQL)\r │   ├── app.js              # Express app configuration\r │   └── server.js           # Server entry point\r ├── .env                    # Root environment variables (DB_URL, API_KEYS)\r ├── .gitignore              # Files to ignore (node_modules, .env)\r └── README.md               # Project documentation",
+  "main": "index.js",
+  "scripts": {
+    "dev":"nodemon ./backend/index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.0",
+    "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^9.4.1",
+    "multer": "^2.1.1",
+    "mysql2": "^3.20.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  }
+}

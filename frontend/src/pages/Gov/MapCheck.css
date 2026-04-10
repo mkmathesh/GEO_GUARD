@@ -1,0 +1,26 @@
+.MapCheck-container {
+  width: 100%;
+  min-height: 100vh;
+  text-align: center;
+}
+
+.search-box {
+  margin: 10px;
+}
+
+.search-box input {
+  padding: 8px;
+  width: 220px;
+  font-size: 14px;
+}
+
+.search-box button {
+  padding: 8px 12px;
+  margin-left: 5px;
+  cursor: pointer;
+}
+
+.map {
+  height: 500px;
+  width: 50%;
+}

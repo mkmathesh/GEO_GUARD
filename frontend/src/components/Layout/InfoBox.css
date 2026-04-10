@@ -1,0 +1,15 @@
+.Infobox-container{
+    width:90%;
+    height:25%;
+    background-color: black;
+    opacity: 0.6;
+    color: white;
+    padding: 0.5rem;
+    font-family: sans-serif;
+    text-align: justify;
+    margin: 1rem;
+    border-radius: 0.rem;
+    y:1000px;
+    line-height:30px;
+    font-weight: bold;
+}
