@@ -15,7 +15,7 @@ function Check() {
       formData.append("img1", img1);
       formData.append("img2", img2);
 
-      const res = await fetch("http://localhost:3000/api/detect/check", {
+      const res = await fetch("https://geo-guard-69nu.onrender.com/api/detect/check", {
         method: "POST",
         body: formData,
       });

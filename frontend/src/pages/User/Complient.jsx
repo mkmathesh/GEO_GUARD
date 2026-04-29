@@ -20,7 +20,7 @@ const handlecomplient= async(e)=>{
     date:new Date().toLocaleDateString()
   }
   try{
-     const response=await axios.post("http://localhost:3000/api/complaint/complaintregister",data);
+     const response=await axios.post("https://geo-guard-69nu.onrender.com/api/complaint/complaintregister",data);
      toast.success("Complaint Registered!", {
             autoClose: 2000,
             position: "top-center",

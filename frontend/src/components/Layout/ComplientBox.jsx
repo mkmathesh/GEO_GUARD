@@ -27,7 +27,7 @@ export const ComplientBox = (props) => {
         }
        
         const res=await axios.put(
-          `http://localhost:3000/api/complaint/complaintupdate/${props.data._id}`,data
+          `https://geo-guard-69nu.onrender.com/api/complaint/complaintupdate/${props.data._id}`,data
         );
         console.log(res.success);
          props.checker(Date.now());

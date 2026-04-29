@@ -16,7 +16,7 @@ export const Login = ({ close }) => {
     };
     try {
       const response = await axios.post(
-        "http://localhost:3000/api/auth/login",
+        "https://geo-guard-69nu.onrender.com/api/auth/login",
         data,
         
       );

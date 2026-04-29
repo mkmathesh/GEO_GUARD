@@ -18,7 +18,7 @@ export const Register = ({ close }) => {
       role: "user",
     };
     try {
-      const res = axios.post("http://localhost:3000/api/auth/register", data);
+      const res = axios.post("https://geo-guard-69nu.onrender.com/api/auth/register", data);
       nav("/login");
       console.log(res);
       if (res.data.error === "Invaild email format") {

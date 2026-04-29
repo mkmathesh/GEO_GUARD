@@ -18,7 +18,7 @@ export const ComplientView = () => {
     const fetchdata = async () => {
       try {
         const res = await axios.get(
-          "http://localhost:3000/api/complaint/complaintview",
+          "https://geo-guard-69nu.onrender.com/api/complaint/complaintview",
         );
 
         setdata(res.data.data);
