@@ -4,9 +4,6 @@ import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Link } from "react-router-dom";
 
-import forest from "../assets/images/forest.jpg";
-import building from "../assets/images/building.jpg";
-
 gsap.registerPlugin(ScrollTrigger);
 
 export const Dashboard = () => {
@@ -166,7 +163,7 @@ export const Dashboard = () => {
       <div
         id={"box1"}
         className="pt-10 w-full h-[100vh] bg-white-100 text-black bg-cover bg-center bg-no-repeat flex items-center"
-        style={{ backgroundImage: `url(${handtree})` }}
+        style={{ backgroundImage: `url(/handtree.png)` }}
       >
         <div className="w-150 h-50 absolute left-210 top--20  flex justify-end items-start rounded-lg font-Poppins">
           <h1
@@ -205,7 +202,7 @@ export const Dashboard = () => {
         >
           <div
             className="box311 w-[24%] h-[0%] opacity-0 bg-cover bg-center bg-no-repeat"
-            style={{ backgroundImage: `url(${forest})` }}
+            style={{ backgroundImage: `url(/forest.jpg)` }}
           ></div>
           <div className="box312 w-[0%] h-[80%] bg-white-100 opacity-0 overflow-hidden flex justify-center items-center ">
             <p className="text-lg md:text-xl text-gray-700 max-w-md font-normal">
@@ -221,7 +218,7 @@ export const Dashboard = () => {
           </div>
           <div
             className="box311 w-[24%] h-[0%] bg-white-100 opacity-0 bg-cover bg-center bg-no-repeat "
-            style={{ backgroundImage: `url(${building})` }}
+            style={{ backgroundImage: `url(/building.jpg)` }}
           ></div>
         </div>
         <div
