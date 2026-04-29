@@ -12,7 +12,6 @@ import { Register } from "./pages/Register";
 import { Navbar } from "./components/Layout/Navbar";
 import { Footer } from "./components/Layout/Footer";
 import { ComplientView } from "./pages/Gov/ComplientView";
-import { Status } from "./pages/Gov/status";
 import { MapCheck } from "./pages/Gov/MapCheck";
 import Check from "./pages/Gov/Check";
 function App() {
