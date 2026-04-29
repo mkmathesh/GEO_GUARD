@@ -6,7 +6,6 @@ import { useRef } from "react";
 import { Complient } from "./Complient";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import tree from "../../assets/images/tree.png";
 import "./UserHome.css";
 gsap.registerPlugin(ScrollTrigger);
 export const UserHome = () => {

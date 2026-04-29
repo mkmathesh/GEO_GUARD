@@ -1,11 +1,9 @@
 import { useEffect, useRef, useState } from "react";
-import "./dashboard.css";
+import "./Dashboard.css";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Link } from "react-router-dom";
-import tree from "../assets/images/tree.png";
-import apple from "../assets/images/apple.png";
-import handtree from "../assets/images/handtree.png";
+
 import forest from "../assets/images/forest.jpg";
 import building from "../assets/images/building.jpg";
 
