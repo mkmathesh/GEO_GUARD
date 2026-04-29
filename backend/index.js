@@ -13,7 +13,9 @@ require("dotenv").config();
 const app = express();
 
 app.use(
-  cors()
+  cors({
+    config:"https://geoguarding.netlify.app"
+  })
 );
 
 app.use(express.json());
