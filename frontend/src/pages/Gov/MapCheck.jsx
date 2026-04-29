@@ -12,7 +12,6 @@ import axios from "axios";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 
-// ✅ Fix marker icon issue
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
   iconRetinaUrl:
@@ -23,7 +22,6 @@ L.Icon.Default.mergeOptions({
     "https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png",
 });
 
-// ✅ Component to move map when position updates
 const ChangeView = ({ center }) => {
   const map = useMap();
   
@@ -37,7 +35,7 @@ const ChangeView = ({ center }) => {
 
 export const MapCheck = () => {
   const [query, setQuery] = useState("");
-  const [position, setPosition] = useState([20.5937, 78.9629]); // Default India
+  const [position, setPosition] = useState([20.5937, 78.9629]);
   const store=useLocation();
   useEffect(()=>{
   if(store.data!=null)
@@ -87,26 +85,20 @@ export const MapCheck = () => {
           onChange={(e) => setQuery(e.target.value)}
         />
         <button onClick={handleSearch}>Search</button>
-        <h1>fi</h1>
       </div>
 
-      {/* 🗺️ Map */}
+
       <MapContainer center={position} zoom={5} className="map">
         <ChangeView center={position} />
-         
-
-        {/* ✅ Use reliable tile server (fix your error) */}
+       
         <TileLayer
           attribution="&copy; OpenStreetMap contributors & CartoDB"
           url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
         />
-        
-
         <Marker position={position}>
           <Popup>{query || "Selected Location"}</Popup>
         </Marker>
       </MapContainer>
-     
     </div>
   );
 };

@@ -1,8 +1,7 @@
 .Navbar_container {
   width: 100%;
   height: auto;
-  background-color: rgb(135,255,141);
-  opacity: 0.6;
+  background-color: rgb(255, 255, 255);
   border-radius: 5px;
   display: flex;
   gap: 2px;
@@ -39,7 +38,7 @@
   font-size: medium;
 }
 .nav_container a:hover {
-  color: white;
+  color: rgb(7, 90, 0);
 }
 .nav_container a:active {
   transform: scale(1.2);

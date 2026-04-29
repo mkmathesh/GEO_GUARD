@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Land Encroachment Detection</title>
+
+    <style>
+        body {
+            font-family: Arial;
+            background: #eef2f3;
+            text-align: center;
+        }
+
+        h1 {
+            background: #2c3e50;
+            color: white;
+            padding: 15px;
+        }
+
+        form {
+            margin: 20px;
+        }
+
+        input {
+            margin: 10px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background: #27ae60;
+            color: white;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .results {
+            margin-top: 20px;
+        }
+
+        .images {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .card {
+            background: white;
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px gray;
+        }
+
+        img {
+            width: 250px;
+            border-radius: 10px;
+        }
+
+        .status {
+            font-size: 20px;
+            margin-top: 15px;
+        }
+
+        .percent {
+            font-size: 18px;
+            color: #2c3e50;
+        }
+    </style>
+</head>
+
+<body>
+
+<h1>🏢 Land Encroachment Detection System</h1>
+
+<form method="POST" enctype="multipart/form-data">
+    <input type="file" name="img1" required>
+    <input type="file" name="img2" required>
+    <br>
+    <button type="submit">Detect Change</button>
+</form>
+
+{% if percent is not none %}
+
+<div class="results">
+
+    <div class="status">{{ status }}</div>
+    <div class="percent">Change Detected: {{ percent }}%</div>
+
+    <div class="images">
+
+        <div class="card">
+            <h3>Before</h3>
+            <img src="{{ url_for('static', filename='img1.png') }}">
+        </div>
+
+        <div class="card">
+            <h3>After</h3>
+            <img src="{{ url_for('static', filename='img2.png') }}">
+        </div>
+
+        <div class="card">
+            <h3>Change Map</h3>
+            <img src="{{ url_for('static', filename='result.png') }}">
+        </div>
+
+    </div>
+
+</div>
+
+{% endif %}
+
+</body>
+</html>

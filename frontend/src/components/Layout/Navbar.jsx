@@ -26,7 +26,7 @@ export const Navbar=(props)=>{
                 <Link to={"/"+role+"/"+props.nav1}>{props.nav1}</Link>
                  <Link to={"/"+role+"/"+props.nav2}>{props.nav2}</Link>
                  <Link to={"/"+role+"/"+props.nav3}>{props.nav3}</Link>
-                 <Link to={"/"+role}>{props.about}</Link>
+                
             </div>
             <div className="profile_container ">
                 <h3 className="text-white font-bold text-2xl">{name}</h3>

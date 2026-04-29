@@ -1,6 +1,7 @@
 import React from "react";
 import "./Register.css";
 import axios from "axios";
+import { Bounce, Slide, ToastContainer, Zoom, toast } from "react-toastify";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 export const Register = ({ close }) => {
@@ -12,22 +13,19 @@ export const Register = ({ close }) => {
     e.preventDefault();
     const data = {
       username: username,
-      gmail: gmail,
+      email: gmail,
       password: password,
-      role:"user"
+      role: "user",
     };
-    try{
-       const response = axios.post(
-      "http://localhost:3000/api/auth/register",
-      data,
-    );
-    nav("/login");
-    }
-    catch(err)
-    {
-      
-    }
-   
+    try {
+      const res = axios.post("http://localhost:3000/api/auth/register", data);
+      nav("/login");
+      console.log(res);
+      if (res.data.error === "Invaild email format") {
+        toast.warning("Invaild email format");
+      } else {
+      }
+    } catch (err) {}
   };
   return (
     <div className="register-container">
@@ -64,6 +62,7 @@ export const Register = ({ close }) => {
           </form>
         </div>
       </div>
+      <ToastContainer />
     </div>
   );
 };

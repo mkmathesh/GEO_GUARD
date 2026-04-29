@@ -5,13 +5,17 @@
 }
 
 .search-box {
-  margin: 10px;
+  background-color: rgb(0, 213, 255);
+  padding: 1rem;
+   margin-bottom: 1rem;
+   border: 2px solid black;
 }
 
 .search-box input {
   padding: 8px;
   width: 220px;
   font-size: 14px;
+ 
 }
 
 .search-box button {
@@ -21,6 +25,8 @@
 }
 
 .map {
-  height: 500px;
-  width: 50%;
+  height:530px;
+  width:90%;
+  margin: auto;
+  border: 2px solid black;
 }

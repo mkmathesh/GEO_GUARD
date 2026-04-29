@@ -5,11 +5,23 @@
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  background-color: rgb(0, 0, 0);
-  opacity: 0.6;
+  background-color: rgb(240, 253, 255);
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
+  padding-bottom: 2rem;
+}
+.Complientview-navBox{
+  width:100%;
+  height:auto;
+  background-color: rgb(0, 213, 255);
+  border-bottom: 2px solid black;
+  border-top: 2px solid black;
+  display: flex;
+  gap:2rem;
+  padding:0.5rem;
+  padding-left:2rem;
+  cursor:pointer;
 }
 .complientview-search {
   width: 100%;
@@ -20,15 +32,19 @@
   justify-content: flex-end;
   gap: 1rem;
   margin: 1rem;
+  margin-top: 0rem;
+  background-color: rgb(0, 213, 255);
+  border-bottom: 2px solid black;
 }
 .complientview-search input {
   padding: 0.3rem;
   font-size: 1rem;
-  border-color: rgb(255, 255, 255);
+  border:2px solid rgb(0, 0, 0);
   background-color: rgb(255, 255, 255);
 }
 .complientview-search label {
-  color: rgb(255, 255, 255);
-  font-size: 1em;
+  color: rgba(0, 0, 0, 0.244);
+  font-size: 1.2rem;
   font-weight: bold;
+
 }

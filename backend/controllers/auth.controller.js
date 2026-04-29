@@ -1,16 +1,19 @@
 const { User } = require("../models/user.model.js");
 const Register = async (req, res) => {
   try {
+    console.log("register");
     const { username, email, password} = req.body;
     const exitstingUser = await User.findOne({ username });
     const emailRagex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRagex.test(email)) {
+      console.log("error: Invaild email format");
       return res
         .status(400)
         .json({ success: false, error: "Invaild email format" });
     }
-   
+  
     if (exitstingUser) {
+      console.log("error: Username is already taken");
       return res
         .status(400)
         .json({ success: false, error: "Username is already taken" });

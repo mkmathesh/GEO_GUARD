@@ -14,6 +14,7 @@ import { Footer } from "./components/Layout/Footer";
 import { ComplientView } from "./pages/Gov/ComplientView";
 import { Status } from "./pages/Gov/status";
 import { MapCheck } from "./pages/Gov/MapCheck";
+import Check from "./pages/Gov/Check";
 function App() {
   return (
     <>
@@ -23,7 +24,6 @@ function App() {
             path="/"
             element={
               <ProtectedRoute allow="/">
-                <Navbar home="home" nav1="home" nav2="home"  nav3="home"  about="about" sign="sign in"/>
                 <Dashboard />
               </ProtectedRoute>
             }
@@ -49,7 +49,7 @@ function App() {
             path="/user"
             element={
               <ProtectedRoute allow="user">
-                <Navbar home="home" nav1="detail"  nav2="complaint"  nav3="contact"  about="about" sign="sign out"/>
+              
                 <UserHome/>
               </ProtectedRoute>
             }
@@ -59,7 +59,6 @@ function App() {
             path="/user/complaint"
             element={
               <ProtectedRoute allow="user">
-                <Navbar home="home" nav1="detail"  nav2="complaint"  nav3="contact"  about="about" sign="sign out"/>
                <Complient/>
               </ProtectedRoute>
             }
@@ -69,7 +68,7 @@ function App() {
             path="/officer"
             element={
               <ProtectedRoute allow="officer">
-                <Navbar home="home" nav1="status"  nav2="complaints"  nav3="check"  about="about" sign="sign out"/>
+                <Navbar home="home" nav1="check"  nav2="complaints"  nav3="map"  about="about" sign="sign out"/>
                 <GovHome/>
               </ProtectedRoute>
             }
@@ -78,17 +77,8 @@ function App() {
             path="/officer/complaints"
             element={
               <ProtectedRoute allow="officer">
-                <Navbar home="home" nav1="status"  nav2="complaints"  nav3="check"  about="about" sign="sign out"/>
+                <Navbar home="home" nav1="check"  nav2="complaints"  nav3="map"  about="about" sign="sign out"/>
                 <ComplientView/>
-              </ProtectedRoute>
-            }
-          ></Route>
-           <Route
-            path="/officer/status"
-            element={
-              <ProtectedRoute allow="officer">
-                <Navbar home="home" nav1="status"  nav2="complaints"  nav3="check"  about="about" sign="sign out"/>
-                <Status/>
               </ProtectedRoute>
             }
           ></Route>
@@ -96,7 +86,16 @@ function App() {
             path="/officer/check"
             element={
               <ProtectedRoute allow="officer">
-                <Navbar home="home" nav1="status"  nav2="complaints"  nav3="check"  about="about" sign="sign out"/>
+                <Navbar home="home" nav1="check"  nav2="complaints"  nav3="map"  about="about" sign="sign out"/>
+                <Check/>
+              </ProtectedRoute>
+            }
+          ></Route>
+           <Route
+            path="/officer/map"
+            element={
+              <ProtectedRoute allow="officer">
+                <Navbar home="home" nav1="check"  nav2="complaints"  nav3="map"  about="about" sign="sign out"/>
                 <MapCheck/>
               </ProtectedRoute>
             }
@@ -105,7 +104,7 @@ function App() {
             path="/officer/check"
             element={
               <ProtectedRoute allow="officer">
-                <Navbar home="home" nav1="status"  nav2="complaints"  nav3="check"  about="about" sign="sign out"/>
+                <Navbar home="home" nav1="check"  nav2="complaints"  nav3="check"  about="about" sign="sign out"/>
                 <MapCheck/>
               </ProtectedRoute>
             }

@@ -27,9 +27,9 @@ my-app/
 server side install
 
 npm init -y
-npm install express mysql2 cors dotenv bcryptjs jsonwebtoken cookie-parser multer
+npm install cors dotenv bcryptjs jsonwebtoken cookie-parser multer cross-env
 
-npm i mongoose
+npm i mongoose express mongoose
 npm i nodemon -D
 
 

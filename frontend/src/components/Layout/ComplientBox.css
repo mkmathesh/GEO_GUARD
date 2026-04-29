@@ -6,34 +6,23 @@
     margin:1rem;
     padding:0.5rem;
     display: flex;
+    flex-direction: column;
     justify-content: space-between;
     background-color: rgb(255, 255, 255);
     color: black;
 }
+
 .Complientbox-container:hover{
     width:61%;
     width:61%;
     transform: translateY(-3px);
     border: 2px solid rgb(0, 0, 0);
-}
-.complientbox1{
-    width:60%;
-    height:auto;
-}
-.complientbox2{
-    width:25%;
-    height:auto;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: flex-start;
     
 }
-.complientbox3{
-    width:15%;
+.complientbox{
+    width:100%;
     height:auto;
     display: flex;
-    justify-content: flex-end;
-    align-items: flex-start;
-    
+    justify-content: space-between;
+    align-items: center;
 }

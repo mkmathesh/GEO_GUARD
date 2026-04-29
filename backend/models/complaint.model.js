@@ -27,9 +27,10 @@ const complaintSchema = new mongoose.Schema(
       required: true,
     },
     status:{
-      type: mongoose.Schema.Types.Boolean,
+      type: mongoose.Schema.Types.String,
       required: true,
-      default:false
+      default:"pending",
+      enum:['pending','inspection','completed']
       
     }
   },

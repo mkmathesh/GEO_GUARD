@@ -4,7 +4,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgb(0, 0, 0);
+  background-color: rgb(255, 255, 255);
   backdrop-filter: blur(10px);
   z-index: 1000;
   display: flex;
@@ -12,7 +12,7 @@
   align-items: center;
 }
 .register-box {
-  width: 27%;
+  width: 30%;
   height: auto;
   background-color: white;
   display: flex;
@@ -24,7 +24,7 @@
   box-shadow: 1px 1px 5px 1px black;
   padding: 2rem;
   border-radius: 0.5rem;
-}
+  
 .register-title {
   width: 100%;
   height: 20%;
@@ -60,6 +60,9 @@
   border: 2px solid black;
   border-radius: 0.5rem;
   margin-top: 0.4rem;
+  font-weight:bold;
+    font-family: 'Poppins', sans-serif;
+}
 }
 .register-form form label {
   font-size: 1rem;

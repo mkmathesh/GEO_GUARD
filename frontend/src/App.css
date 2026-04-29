@@ -5,9 +5,9 @@
     scrollbar-color: green;
      scrollbar-width:10px;
      scroll-snap-type: x mandatory;
+     font-family: 'Poppins', sans-serif;
     
 }
 body {
-    font-family: sans-serif;
-    background-color: #fff;
+  font-family: 'Poppins', sans-serif;
 }

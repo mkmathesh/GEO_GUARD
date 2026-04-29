@@ -18,7 +18,9 @@ export const Login = ({ close }) => {
       const response = await axios.post(
         "http://localhost:3000/api/auth/login",
         data,
+        
       );
+      console.log(response);
       localStorage.setItem("username", response.data.data.username);
       localStorage.setItem("role", response.data.data.role);
       if (response.data.data.role === "user") {
