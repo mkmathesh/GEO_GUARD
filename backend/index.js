@@ -14,7 +14,7 @@ const app = express();
 
 app.use(
   cors({
-    config:"https://geoguarding.netlify.app"
+    origin:"https://geoguarding.netlify.app"
   })
 );
 
