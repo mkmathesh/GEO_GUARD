@@ -13,7 +13,7 @@ const CheckDetection = async (req, res) => {
     formData.append("img2", req.files.img2.data, req.files.img2.name);
 
     const response = await axios.post(
-      "http://127.0.0.1:5000/api/detect/check",
+      "https://geo-guard-3.onrender.com/api/detect/check",
       formData,
       { headers: formData.getHeaders() }
     );
