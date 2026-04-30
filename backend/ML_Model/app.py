@@ -10,17 +10,20 @@ import base64
 from model import LightIOCNN, extract_features
 
 app = Flask(__name__)
+
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-
+# ✅ Load model safely
 model = LightIOCNN(num_classes=7)
-model.load_state_dict(
-    torch.load(os.path.join(BASE_DIR, "iocnn_best.pth"), map_location="cpu"),
-    strict=False
-)
+model_path = os.path.join(BASE_DIR, "iocnn_best.pth")
+
+if not os.path.exists(model_path):
+    raise FileNotFoundError(f"Model not found at {model_path}")
+
+model.load_state_dict(torch.load(model_path, map_location="cpu"), strict=False)
 model.eval()
 
-
+# ✅ Image transform
 transform = T.Compose([
     T.Resize((64, 64)),
     T.ToTensor(),
@@ -39,10 +42,8 @@ def get_building_mask(img):
     upper = np.array([180, 60, 255])
 
     mask = cv2.inRange(hsv, lower, upper)
-
     mask = cv2.medianBlur(mask, 5)
     return mask
-
 
 def detect_changes(img1, img2):
     img1 = np.array(img1.resize((256, 256)))
@@ -82,17 +83,14 @@ def detect_changes(img1, img2):
     change_map = cv2.medianBlur(change_map, 5)
     return change_map
 
-
 def overlay_buildings(img, change_map):
     img = np.array(img.resize((256, 256)))
 
     color_mask = np.zeros_like(img)
-
     color_mask[change_map == 255] = [255, 0, 0]
 
     result = cv2.addWeighted(img, 0.6, color_mask, 0.4, 0)
     return result
-
 
 @app.route('/api/detect/check', methods=['POST'])
 def detect():
@@ -123,8 +121,10 @@ def detect():
 
     except Exception as e:
         print("ERROR:", str(e))
-        return jsonify({"error": "Detection Failed"}), 500
+        return jsonify({"error": str(e)}), 500
 
 
+# ✅ REQUIRED for Render
 if __name__ == "__main__":
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 10000))
+    app.run(host="0.0.0.0", port=port)
