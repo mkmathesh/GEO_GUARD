@@ -15,7 +15,9 @@ const CheckDetection = async (req, res) => {
     const response = await axios.post(
       "https://geo-guard-3.onrender.com/api/detect/check",
       formData,
-      { headers: formData.getHeaders() }
+      { headers: formData.getHeaders(),
+         timeout: 120000 
+       }
     );
 
     console.log("FLASK RESPONSE:", response.data); 

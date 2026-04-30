@@ -6,10 +6,12 @@ import numpy as np
 import cv2
 import os
 import base64
-
+from flask_cors import CORS
 from model import LightIOCNN, extract_features
 
 app = Flask(__name__)
+
+CORS(app)
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
