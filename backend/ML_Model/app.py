@@ -7,6 +7,7 @@ import numpy as np
 import cv2
 import os
 import base64
+import time
 from model import LightIOCNN, extract_features
 
 app = Flask(__name__)
@@ -15,31 +16,29 @@ CORS(app)
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 # =========================
-# ✅ LOAD MODEL (FIXED)
+# ✅ LOAD MODEL
 # =========================
 model = LightIOCNN(num_classes=7)
 model_path = os.path.join(BASE_DIR, "iocnn_best.pth")
 
 print("📦 Loading model from:", model_path)
 
-if not os.path.exists(model_path):
-    raise FileNotFoundError(f"Model not found at {model_path}")
-
 checkpoint = torch.load(model_path, map_location="cpu")
 
-# 🔍 Debug checkpoint structure
-print("🧠 Checkpoint keys:", checkpoint.keys())
-
-# ✅ FIX: load correct key
 if "model_state" in checkpoint:
     model.load_state_dict(checkpoint["model_state"], strict=False)
 else:
-    # fallback if pure state_dict
     model.load_state_dict(checkpoint, strict=False)
 
 model.eval()
+print("✅ Model loaded")
 
-print("✅ Model loaded successfully")
+# =========================
+# ✅ HEALTH ROUTE
+# =========================
+@app.route("/")
+def home():
+    return "ML server running"
 
 # =========================
 # ✅ TRANSFORM
@@ -55,134 +54,72 @@ transform = T.Compose([
 # ✅ FEATURE EXTRACTION
 # =========================
 def get_feature(img_patch):
-    try:
-        t = transform(Image.fromarray(img_patch)).unsqueeze(0)
-        with torch.no_grad():
-            return extract_features(model, t)
-    except Exception as e:
-        print("❌ Feature extraction error:", str(e))
-        return None
-
+    t = transform(Image.fromarray(img_patch)).unsqueeze(0)
+    with torch.no_grad():
+        return extract_features(model, t)
 
 # =========================
-# ✅ BUILDING MASK
-# =========================
-def get_building_mask(img):
-    hsv = cv2.cvtColor(img, cv2.COLOR_RGB2HSV)
-
-    lower = np.array([0, 0, 120])
-    upper = np.array([180, 60, 255])
-
-    mask = cv2.inRange(hsv, lower, upper)
-    mask = cv2.medianBlur(mask, 5)
-    return mask
-
-
-# =========================
-# ✅ CHANGE DETECTION
+# ✅ CHANGE DETECTION (OPTIMIZED)
 # =========================
 def detect_changes(img1, img2):
-    img1 = np.array(img1.resize((256, 256)))
-    img2 = np.array(img2.resize((256, 256)))
-
-    img1 = cv2.GaussianBlur(img1, (5, 5), 0)
-    img2 = cv2.GaussianBlur(img2, (5, 5), 0)
-
-    building_mask = get_building_mask(img2)
+    img1 = np.array(img1.resize((128, 128)))   # 🔥 reduced size
+    img2 = np.array(img2.resize((128, 128)))
 
     h, w, _ = img1.shape
     change_map = np.zeros((h, w), dtype=np.uint8)
 
-    for y in range(0, h, 32):
-        for x in range(0, w, 32):
+    for y in range(0, h, 64):   # 🔥 fewer loops
+        for x in range(0, w, 64):
 
-            p1 = img1[y:y+32, x:x+32]
-            p2 = img2[y:y+32, x:x+32]
+            p1 = img1[y:y+64, x:x+64]
+            p2 = img2[y:y+64, x:x+64]
 
-            if p1.shape[0] != 32 or p1.shape[1] != 32:
+            if p1.shape[0] != 64 or p1.shape[1] != 64:
                 continue
 
-            try:
-                pixel_diff = np.mean((p1.astype("float") - p2.astype("float"))**2) / 255.0
+            pixel_diff = np.mean((p1.astype("float") - p2.astype("float"))**2)
 
-                f1 = get_feature(p1)
-                f2 = get_feature(p2)
+            f1 = get_feature(p1)
+            f2 = get_feature(p2)
 
-                if f1 is None or f2 is None:
-                    continue
+            feature_diff = torch.mean((f1 - f2) ** 2).item()
+            score = (pixel_diff * 0.5) + (feature_diff * 0.5)
 
-                if f1.shape != f2.shape:
-                    print("⚠️ Shape mismatch:", f1.shape, f2.shape)
-                    continue
+            if score > 0.2:
+                change_map[y:y+64, x:x+64] = 255
 
-                feature_diff = torch.mean((f1 - f2) ** 2).item()
-                score = (pixel_diff * 0.5) + (feature_diff * 0.5)
-
-                if score > 0.18:
-                    patch_mask = building_mask[y:y+32, x:x+32]
-
-                    if np.mean(patch_mask) > 20:
-                        change_map[y:y+32, x:x+32] = 255
-
-            except Exception as e:
-                print(f"⚠️ Patch error at ({x},{y}):", str(e))
-                continue
-
-    change_map = cv2.medianBlur(change_map, 5)
     return change_map
 
+# =========================
+# ✅ OVERLAY
+# =========================
+def overlay(img, change_map):
+    img = np.array(img.resize((128, 128)))
+    mask = np.zeros_like(img)
+    mask[change_map == 255] = [255, 0, 0]
+    return cv2.addWeighted(img, 0.7, mask, 0.3, 0)
 
 # =========================
-# ✅ OVERLAY RESULT
-# =========================
-def overlay_buildings(img, change_map):
-    img = np.array(img.resize((256, 256)))
-
-    color_mask = np.zeros_like(img)
-    color_mask[change_map == 255] = [255, 0, 0]
-
-    result = cv2.addWeighted(img, 0.6, color_mask, 0.4, 0)
-    return result
-
-
-# =========================
-# ✅ API ROUTE
+# ✅ API
 # =========================
 @app.route('/api/detect/check', methods=['POST'])
 def detect():
     try:
-        print("🚀 API HIT")
+        start = time.time()
 
-        if 'img1' not in request.files or 'img2' not in request.files:
-            return jsonify({"error": "Upload both images"}), 400
-
-        img1_file = request.files['img1']
-        img2_file = request.files['img2']
-
-        if img1_file.filename == "" or img2_file.filename == "":
-            return jsonify({"error": "Empty file uploaded"}), 400
-
-        img1 = Image.open(img1_file).convert("RGB")
-        img2 = Image.open(img2_file).convert("RGB")
-
-        print("🖼️ Images loaded")
+        img1 = Image.open(request.files['img1']).convert("RGB")
+        img2 = Image.open(request.files['img2']).convert("RGB")
 
         change_map = detect_changes(img1, img2)
-        print("✅ Detection complete")
+        result = overlay(img2, change_map)
 
-        result_img = overlay_buildings(img2, change_map)
+        percent = round((np.sum(change_map == 255) / change_map.size) * 100, 2)
+        status = "Building Detected" if percent > 1 else "No Change"
 
-        total = change_map.size
-        changed = np.sum(change_map == 255)
-        percent = round((changed / total) * 100, 2)
-
-        status = "Building Detected" if percent > 1 else "No Building Change"
-
-        success, buffer = cv2.imencode(".png", result_img)
-        if not success:
-            raise Exception("Image encoding failed")
-
+        _, buffer = cv2.imencode(".png", result)
         image_base64 = base64.b64encode(buffer).decode("utf-8")
+
+        print("⏱ Time:", time.time() - start)
 
         return jsonify({
             "percent": percent,
@@ -196,9 +133,8 @@ def detect():
 
 
 # =========================
-# ✅ RUN SERVER (RENDER)
+# ✅ RUN
 # =========================
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
-    print(f"🌍 Running on port {port}")
     app.run(host="0.0.0.0", port=port)

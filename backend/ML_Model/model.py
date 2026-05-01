@@ -7,7 +7,6 @@ class LightIOCNN(nn.Module):
         super().__init__()
 
         self.mob = tv_models.mobilenet_v2(weights=None)
-
         self.backbone = self.mob.features
         self.pool = nn.AdaptiveAvgPool2d(1)
         self.fc = nn.Linear(1280, num_classes)
@@ -17,7 +16,6 @@ class LightIOCNN(nn.Module):
         pooled = self.pool(feat)
         pooled = pooled.view(pooled.size(0), -1)
         out = self.fc(pooled)
-
         return feat, out
 
 
