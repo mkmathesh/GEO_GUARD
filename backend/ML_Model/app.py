@@ -15,7 +15,7 @@ CORS(app)
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 # =========================
-# ✅ LOAD MODEL
+# ✅ LOAD MODEL (FIXED)
 # =========================
 model = LightIOCNN(num_classes=7)
 model_path = os.path.join(BASE_DIR, "iocnn_best.pth")
@@ -25,8 +25,18 @@ print("📦 Loading model from:", model_path)
 if not os.path.exists(model_path):
     raise FileNotFoundError(f"Model not found at {model_path}")
 
-state_dict = torch.load(model_path, map_location="cpu")
-model.load_state_dict(state_dict, strict=True)   # ✅ strict loading
+checkpoint = torch.load(model_path, map_location="cpu")
+
+# 🔍 Debug checkpoint structure
+print("🧠 Checkpoint keys:", checkpoint.keys())
+
+# ✅ FIX: load correct key
+if "model_state" in checkpoint:
+    model.load_state_dict(checkpoint["model_state"], strict=False)
+else:
+    # fallback if pure state_dict
+    model.load_state_dict(checkpoint, strict=False)
+
 model.eval()
 
 print("✅ Model loaded successfully")
@@ -149,8 +159,6 @@ def detect():
         img1_file = request.files['img1']
         img2_file = request.files['img2']
 
-        print("📂 Files:", img1_file.filename, img2_file.filename)
-
         if img1_file.filename == "" or img2_file.filename == "":
             return jsonify({"error": "Empty file uploaded"}), 400
 
@@ -169,8 +177,6 @@ def detect():
         percent = round((changed / total) * 100, 2)
 
         status = "Building Detected" if percent > 1 else "No Building Change"
-
-        print("📊 Percent:", percent)
 
         success, buffer = cv2.imencode(".png", result_img)
         if not success:
@@ -193,6 +199,6 @@ def detect():
 # ✅ RUN SERVER (RENDER)
 # =========================
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 10000))  # ✅ REQUIRED
+    port = int(os.environ.get("PORT", 10000))
     print(f"🌍 Running on port {port}")
     app.run(host="0.0.0.0", port=port)
