@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 import torch
 import torchvision.transforms as T
 from PIL import Image
@@ -6,7 +7,6 @@ import numpy as np
 import cv2
 import os
 import base64
-from flask_cors import CORS
 from model import LightIOCNN, extract_features
 
 app = Flask(__name__)
@@ -15,21 +15,24 @@ CORS(app)
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 # =========================
-# ✅ LOAD MODEL SAFELY
+# ✅ LOAD MODEL
 # =========================
 model = LightIOCNN(num_classes=7)
 model_path = os.path.join(BASE_DIR, "iocnn_best.pth")
 
-print("📦 Model path:", model_path)
+print("📦 Loading model from:", model_path)
 
 if not os.path.exists(model_path):
     raise FileNotFoundError(f"Model not found at {model_path}")
 
-model.load_state_dict(torch.load(model_path, map_location="cpu"), strict=False)
+state_dict = torch.load(model_path, map_location="cpu")
+model.load_state_dict(state_dict, strict=True)   # ✅ strict loading
 model.eval()
 
+print("✅ Model loaded successfully")
+
 # =========================
-# ✅ IMAGE TRANSFORM
+# ✅ TRANSFORM
 # =========================
 transform = T.Compose([
     T.Resize((64, 64)),
@@ -44,7 +47,7 @@ transform = T.Compose([
 def get_feature(img_patch):
     try:
         t = transform(Image.fromarray(img_patch)).unsqueeze(0)
-        with torch.no_grad():   # ✅ IMPORTANT FIX
+        with torch.no_grad():
             return extract_features(model, t)
     except Exception as e:
         print("❌ Feature extraction error:", str(e))
@@ -80,7 +83,6 @@ def detect_changes(img1, img2):
     h, w, _ = img1.shape
     change_map = np.zeros((h, w), dtype=np.uint8)
 
-    # 🔥 Slight optimization (reduce load)
     for y in range(0, h, 32):
         for x in range(0, w, 32):
 
@@ -99,8 +101,11 @@ def detect_changes(img1, img2):
                 if f1 is None or f2 is None:
                     continue
 
-                feature_diff = torch.mean((f1 - f2) ** 2).item()
+                if f1.shape != f2.shape:
+                    print("⚠️ Shape mismatch:", f1.shape, f2.shape)
+                    continue
 
+                feature_diff = torch.mean((f1 - f2) ** 2).item()
                 score = (pixel_diff * 0.5) + (feature_diff * 0.5)
 
                 if score > 0.18:
@@ -138,31 +143,27 @@ def detect():
     try:
         print("🚀 API HIT")
 
-        # ✅ Validate files
         if 'img1' not in request.files or 'img2' not in request.files:
             return jsonify({"error": "Upload both images"}), 400
 
         img1_file = request.files['img1']
         img2_file = request.files['img2']
 
-        print("📂 Files received:", img1_file.filename, img2_file.filename)
+        print("📂 Files:", img1_file.filename, img2_file.filename)
 
         if img1_file.filename == "" or img2_file.filename == "":
             return jsonify({"error": "Empty file uploaded"}), 400
 
-        # ✅ Load images
         img1 = Image.open(img1_file).convert("RGB")
         img2 = Image.open(img2_file).convert("RGB")
 
         print("🖼️ Images loaded")
 
-        # ✅ Run detection
         change_map = detect_changes(img1, img2)
-        print("✅ Change detection complete")
+        print("✅ Detection complete")
 
         result_img = overlay_buildings(img2, change_map)
 
-        # ✅ Calculate percentage
         total = change_map.size
         changed = np.sum(change_map == 255)
         percent = round((changed / total) * 100, 2)
@@ -171,7 +172,6 @@ def detect():
 
         print("📊 Percent:", percent)
 
-        # ✅ Encode image safely
         success, buffer = cv2.imencode(".png", result_img)
         if not success:
             raise Exception("Image encoding failed")
@@ -193,5 +193,6 @@ def detect():
 # ✅ RUN SERVER (RENDER)
 # =========================
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 10000))
+    port = int(os.environ.get("PORT", 10000))  # ✅ REQUIRED
+    print(f"🌍 Running on port {port}")
     app.run(host="0.0.0.0", port=port)
